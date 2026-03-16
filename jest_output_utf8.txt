@@ -1,0 +1,65 @@
+﻿
+> halfred-rms@1.0.0 test
+> jest
+
+  console.log
+    [dotenv@17.3.1] injecting env (4) from .env -- tip: ≡ƒöÉ encrypt with Dotenvx: https://dotenvx.com
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+node.exe : FAIL tests/api.test.js
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (FAIL tests/api.test.js:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  ΓùÅ Test suite failed to run
+
+    Jest encountered an unexpected token
+
+    Jest failed to parse a file. This happens e.g. when your code or its dependencies use non-standard JavaScript syntax, or when Jest is not configured to support such syntax.
+
+    Out of the box Jest supports Babel, which will be used to transform your files into valid JS based on your Babel configuration.
+
+    By default "node_modules" folder is ignored by transformers.
+
+    Here's what you can do:
+     ΓÇó If you are trying to use ECMAScript Modules, see https://jestjs.io/docs/ecmascript-modules for how to enable it.
+     ΓÇó If you are trying to use TypeScript, see https://jestjs.io/docs/getting-started#using-typescript
+     ΓÇó To have some of your "node_modules" files transformed, you can specify a custom "transformIgnorePatterns" in your config.
+     ΓÇó If you need a custom transformation, specify a "transform" option in your config.
+     ΓÇó If you simply want to mock your non-JS modules (e.g. binary assets) you can stub them out with the "moduleNameMapper" config option.
+
+    You'll find more details and examples of these config options in the docs:
+    https://jestjs.io/docs/configuration
+    For information about custom transformations, see:
+    https://jestjs.io/docs/code-transformation
+
+    Details:
+
+    C:\Users\ffaizon\OneDrive\Projects\halfred-rms\node_modules\@xenova\transformers\src\transformers.js:14
+    export * from './pipelines.js';
+    ^^^^^^
+
+    SyntaxError: Unexpected token 'export'
+
+    [0m[31m[1m>[22m[39m[90m 1 |[39m [36mconst[39m { pipeline } [33m=[39m require([32m'@xenova/transformers'[39m)[33m;[39m
+     [90m   |[39m                      [31m[1m^[22m[39m
+     [90m 2 |[39m [36mconst[39m db [33m=[39m require([32m'../db'[39m)[33m;[39m
+     [90m 3 |[39m
+     [90m 4 |[39m [36mlet[39m _model [33m=[39m [36mnull[39m[33m;[39m[0m
+
+      at Runtime.createScriptFromCode (node_modules/jest-runtime/build/index.js:1314:40)
+      at Object.require (src/utils/embeddings.js:1:22)
+      at Object.require (src/routes/contacts.js:5:55)
+      at Object.require (src/app.js:10:23)
+      at Object.require (tests/api.test.js:2:13)
+
+Test Suites: 1 failed, 1 total
+Tests:       0 total
+Snapshots:   0 total
+Time:        0.482 s
+Ran all test suites.
+(node:23140) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)

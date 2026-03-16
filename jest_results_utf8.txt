@@ -1,0 +1,48 @@
+﻿
+> halfred-rms@1.0.0 test
+> jest
+
+  console.log
+    [dotenv@17.3.1] injecting env (4) from .env -- tip: ≡ƒöÉ prevent building .env in docker: https://dotenvx.com/prebuild
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+node.exe : (node:36652) Warning: `--localstorage-file` was provided without a valid path
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ((node:36652) Wa...ut a valid path:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/api.test.js
+  Contacts API
+    ΓêÜ POST /api/v1/rms/contacts creates a contact (23 ms)
+    ΓêÜ GET /api/v1/rms/contacts returns contacts (5 ms)
+    ΓêÜ GET /api/v1/rms/contacts/:id returns single contact details (3 ms)
+    ├ù POST /api/v1/rms/contacts/:id/interactions creates an interaction log (4 ms)
+    ΓêÜ POST /api/v1/rms/task-links links a task (3 ms)
+    ΓêÜ GET /api/v1/rms/task-links?task_id returns linked contacts (3 ms)
+
+  ΓùÅ Contacts API ΓÇ║ POST /api/v1/rms/contacts/:id/interactions creates an interaction log
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 201
+    Received: 404
+
+    [0m [90m 80 |[39m       })[33m;[39m
+     [90m 81 |[39m
+    [31m[1m>[22m[39m[90m 82 |[39m     expect(res[33m.[39mstatus)[33m.[39mtoBe([35m201[39m)[33m;[39m
+     [90m    |[39m                        [31m[1m^[22m[39m
+     [90m 83 |[39m     expect(res[33m.[39mbody[33m.[39mid)[33m.[39mtoBeDefined()[33m;[39m
+     [90m 84 |[39m     expect(res[33m.[39mbody[33m.[39msubject)[33m.[39mtoBe([32m'Test Call'[39m)[33m;[39m
+     [90m 85 |[39m   })[33m;[39m[0m
+
+      at Object.toBe (tests/api.test.js:82:24)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 5 passed, 6 total
+Snapshots:   0 total
+Time:        0.616 s, estimated 1 s
+Ran all test suites.
