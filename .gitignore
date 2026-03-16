@@ -1,0 +1,4 @@
+node_modules/
+rms.db
+.env
+*.log
