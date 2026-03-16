@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — Halfred RMS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Dashboard</h1>
+  <span class="date-label">{{ dateLabel }}</span>
+</div>
+
+<!-- REMINDERS DUE -->
+<section class="dashboard-section">
+  <h2 class="section-title overdue-title">🔔 Reminders Due</h2>
+  {% if reminders.length %}
+    <div class="task-list">
+      {% for r in reminders %}
+        <div class="task-row">
+          <div class="task-main">
+            <a href="/contacts/{{ r.contact_id }}" class="task-name">{{ r.contact_name }}</a>
+            <span class="task-meta">
+              <span class="badge badge">{{ r.type }}</span>
+              {% if r.days_overdue > 0 %}
+                <span style="color: var(--danger)">overdue {{ r.days_overdue }} day{{ 's' if r.days_overdue != 1 }}</span>
+              {% else %}
+                <span style="color: var(--text-muted)">today</span>
+              {% endif %}
+            </span>
+          </div>
+          <div class="task-actions">
+            <button class="btn btn-sm btn-outline"
+              hx-post="/reminders/{{ r.id }}/done"
+              hx-target="closest .task-row"
+              hx-swap="outerHTML">Done</button>
+            <button class="btn btn-sm btn-outline"
+              hx-post="/reminders/{{ r.id }}/snooze"
+              hx-target="closest .task-row"
+              hx-swap="outerHTML">Snooze</button>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="empty-state">No reminders due. 🎉</p>
+  {% endif %}
+</section>
+
+<!-- NEEDS ATTENTION -->
+<section class="dashboard-section">
+  <h2 class="section-title today-title">🩺 Needs Attention</h2>
+  {% if needsAttention.length %}
+    <div class="task-list">
+      {% for c in needsAttention %}
+        <div class="task-row">
+          <div class="task-main">
+            <a href="/contacts/{{ c.id }}" class="task-name">{{ c.name }}</a>
+            <span class="task-meta">
+              {% include "partials/health_bar.html" %}
+              <span style="color: var(--text-muted)">last contact: {{ c.days_since | default('never') }}{% if c.days_since %} days ago{% endif %}</span>
+            </span>
+          </div>
+          <div class="task-actions">
+            <a href="/contacts/{{ c.id }}/interactions/new" class="btn btn-sm btn-outline">Log Interaction</a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="empty-state">All contacts are well-attended. ✅</p>
+  {% endif %}
+</section>
+
+<!-- RECENTLY CONTACTED -->
+<section class="dashboard-section">
+  <h2 class="section-title upcoming-title">🕐 Recently Contacted</h2>
+  {% if recentlyContacted.length %}
+    <div class="task-list">
+      {% for c in recentlyContacted %}
+        <div class="task-row">
+          <div class="task-main">
+            <a href="/contacts/{{ c.id }}" class="task-name">{{ c.name }}</a>
+            <span class="task-meta">
+              <span class="badge">{{ c.last_interaction_type }}</span>
+              <span style="color: var(--text-muted)">{{ c.days_ago }} day{{ 's' if c.days_ago != 1 }} ago</span>
+            </span>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="empty-state">No interactions logged in the last 7 days.</p>
+  {% endif %}
+</section>
+{% endblock %}

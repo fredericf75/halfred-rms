@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if contact else 'New Contact' }} — Halfred RMS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>{{ 'Edit Contact' if contact else 'New Contact' }}</h1>
+  <a href="{{ '/contacts/' + contact.id if contact else '/contacts' }}" class="btn btn-outline">Cancel</a>
+</div>
+
+<form method="post" action="{{ '/contacts/' + contact.id + '/edit' if contact else '/contacts' }}" class="task-form">
+  <div class="form-group">
+    <label for="name">Name *</label>
+    <input type="text" id="name" name="name" required class="form-input" value="{{ contact.name if contact else '' }}">
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" class="form-input" value="{{ contact.email if contact else '' }}">
+    </div>
+    <div class="form-group">
+      <label for="phone">Phone</label>
+      <input type="text" id="phone" name="phone" class="form-input" value="{{ contact.phone if contact else '' }}">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label for="relationship_type">Relationship Type</label>
+      <select id="relationship_type" name="relationship_type" class="form-select">
+        <option value="">— Select —</option>
+        {% for t in ['friend', 'family', 'colleague', 'vendor', 'acquaintance', 'other'] %}
+          <option value="{{ t }}" {{ 'selected' if contact and contact.relationship_type == t }}>{{ t }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="status">Status</label>
+      <select id="status" name="status" class="form-select">
+        {% for s in ['active', 'dormant', 'archived'] %}
+          <option value="{{ s }}" {{ 'selected' if contact and contact.status == s else ('selected' if not contact and s == 'active') }}>{{ s }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label for="preferred_contact_method">Preferred Contact Method</label>
+      <select id="preferred_contact_method" name="preferred_contact_method" class="form-select">
+        <option value="">— Select —</option>
+        {% for m in ['email', 'phone', 'meeting', 'message'] %}
+          <option value="{{ m }}" {{ 'selected' if contact and contact.preferred_contact_method == m }}>{{ m }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="check_in_interval_days">Check-in Interval (days)</label>
+      <input type="number" id="check_in_interval_days" name="check_in_interval_days" class="form-input" min="1"
+        value="{{ contact.check_in_interval_days if contact else '' }}">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label for="date_met">Date Met</label>
+      <input type="date" id="date_met" name="date_met" class="form-input"
+        value="{{ contact.date_met if contact else '' }}">
+    </div>
+    <div class="form-group">
+      <label for="time_zone">Time Zone</label>
+      <input type="text" id="time_zone" name="time_zone" class="form-input" placeholder="e.g. America/New_York"
+        value="{{ contact.time_zone if contact else '' }}">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="tags">Tags <span class="hint">(comma-separated)</span></label>
+    <input type="text" id="tags" name="tags" class="form-input"
+      value="{{ contact.tags_display if contact else '' }}">
+  </div>
+
+  <div class="form-group">
+    <label for="notes">Notes</label>
+    <textarea id="notes" name="notes" class="form-textarea" rows="4">{{ contact.notes if contact else '' }}</textarea>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary">{{ 'Save Changes' if contact else 'Create Contact' }}</button>
+  </div>
+</form>
+{% endblock %}

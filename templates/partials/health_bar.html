@@ -1,0 +1,5 @@
+<span class="health-bar-wrap" title="Health: {{ c.health_score }}">
+  <span class="health-bar health-{{ 'green' if c.health_score >= 70 else ('yellow' if c.health_score >= 40 else 'red') }}"
+    style="width: {{ c.health_score }}%"></span>
+</span>
+<span class="health-score health-score-{{ 'green' if c.health_score >= 70 else ('yellow' if c.health_score >= 40 else 'red') }}">{{ c.health_score }}</span>

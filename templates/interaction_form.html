@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Log Interaction — {{ contact.name }} — Halfred RMS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Log Interaction</h1>
+  <a href="/contacts/{{ contact.id }}" class="btn btn-outline">← {{ contact.name }}</a>
+</div>
+
+<form method="post" action="/contacts/{{ contact.id }}/interactions" class="task-form">
+  <div class="form-row">
+    <div class="form-group">
+      <label for="type">Type *</label>
+      <select id="type" name="type" required class="form-select">
+        {% for t in ['call', 'email', 'meeting', 'message', 'video', 'lunch', 'other'] %}
+          <option value="{{ t }}">{{ t }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="interaction_date">Date & Time *</label>
+      <input type="datetime-local" id="interaction_date" name="interaction_date" required class="form-input"
+        value="{{ now_fmt }}">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="subject">Subject</label>
+    <input type="text" id="subject" name="subject" class="form-input">
+  </div>
+
+  <div class="form-group">
+    <label for="summary">Summary <span class="hint">(1–3 sentences)</span></label>
+    <textarea id="summary" name="summary" class="form-textarea" rows="2"></textarea>
+  </div>
+
+  <div class="form-group">
+    <label for="notes">Notes</label>
+    <textarea id="notes" name="notes" class="form-textarea" rows="4"></textarea>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label for="duration_minutes">Duration (minutes)</label>
+      <input type="number" id="duration_minutes" name="duration_minutes" class="form-input" min="1">
+    </div>
+    <div class="form-group">
+      <label for="related_task_id">Linked Task ID</label>
+      <input type="text" id="related_task_id" name="related_task_id" class="form-input" placeholder="e.g. task_123">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="tags">Tags <span class="hint">(comma-separated)</span></label>
+    <input type="text" id="tags" name="tags" class="form-input">
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary">Save Interaction</button>
+  </div>
+</form>
+{% endblock %}

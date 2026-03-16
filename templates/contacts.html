@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Contacts — Halfred RMS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Contacts</h1>
+  <a href="/contacts/new" class="btn btn-primary">+ New Contact</a>
+</div>
+
+<form method="get" action="/contacts" class="filter-bar">
+  <select name="relationship_type" class="filter-select" onchange="this.form.submit()">
+    <option value="">All Types</option>
+    {% for t in rel_types %}
+      <option value="{{ t }}" {% if filters.relationship_type == t %}selected{% endif %}>{{ t }}</option>
+    {% endfor %}
+  </select>
+  <select name="status" class="filter-select" onchange="this.form.submit()">
+    <option value="">All Statuses</option>
+    <option value="active" {% if filters.status == 'active' %}selected{% endif %}>Active</option>
+    <option value="dormant" {% if filters.status == 'dormant' %}selected{% endif %}>Dormant</option>
+    <option value="archived" {% if filters.status == 'archived' %}selected{% endif %}>Archived</option>
+  </select>
+  <input type="search" name="q" class="search-input" placeholder="Search by name…" value="{{ filters.q or '' }}">
+  <button type="submit" class="btn btn-outline">Filter</button>
+</form>
+
+{% if contacts.length %}
+  <div class="task-list">
+    <div class="task-row task-row-header">
+      <span style="flex:2">Name</span>
+      <span style="flex:1">Type</span>
+      <span style="flex:1">Health</span>
+      <span style="flex:1">Last Contact</span>
+      <span style="flex:1">Next Check-in</span>
+    </div>
+    {% for c in contacts %}
+      <a href="/contacts/{{ c.id }}" class="task-row task-row-link">
+        <span class="task-name" style="flex:2">{{ c.name }}</span>
+        <span class="task-meta" style="flex:1">{{ c.relationship_type or '—' }}</span>
+        <span style="flex:1; display:flex; align-items:center; gap:6px;">
+          <span class="health-bar-wrap">
+            <span class="health-bar health-{{ 'green' if c.health_score >= 70 else ('yellow' if c.health_score >= 40 else 'red') }}"
+              style="width:{{ c.health_score }}%"></span>
+          </span>
+          <span class="health-score health-score-{{ 'green' if c.health_score >= 70 else ('yellow' if c.health_score >= 40 else 'red') }}">{{ c.health_score }}</span>
+        </span>
+        <span class="task-meta" style="flex:1">{{ c.last_interaction_date_fmt or 'Never' }}</span>
+        <span class="task-meta" style="flex:1; {{ 'color: var(--danger)' if c.checkin_overdue }}">
+          {{ c.next_checkin_fmt or '—' }}
+        </span>
+      </a>
+    {% endfor %}
+  </div>
+{% else %}
+  <p class="empty-state">No contacts found. <a href="/contacts/new">Add one</a>.</p>
+{% endif %}
+{% endblock %}

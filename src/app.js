@@ -1,11 +1,29 @@
 const express = require('express');
 const cors = require('cors');
+const nunjucks = require('nunjucks');
+const path = require('path');
 const db = require('./db');
 require('dotenv').config();
 
 const app = express();
+
+// Nunjucks templating
+nunjucks.configure(path.join(__dirname, '../templates'), {
+  autoescape: true,
+  express: app,
+});
+app.set('view engine', 'html');
+
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+
+// Static files
+app.use('/static', express.static(path.join(__dirname, '../static')));
+
+// Web UI routes (must come before API to catch /)
+const webRoutes = require('./routes/web');
+app.use('/', webRoutes);
 
 const contactRoutes = require('./routes/contacts');
 const interactionRoutes = require('./routes/interactions');

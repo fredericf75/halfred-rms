@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Search — Halfred RMS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Search</h1>
+</div>
+
+<form method="get" action="/search" class="task-form" style="margin-bottom:24px;">
+  <div class="form-group" style="flex-direction:row;gap:8px;">
+    <input type="search" name="q" class="search-input" style="flex:1;font-size:1rem;padding:10px 14px;"
+      placeholder="Search contacts and interactions…" value="{{ q or '' }}" autofocus>
+    <button type="submit" class="btn btn-primary">Search</button>
+  </div>
+</form>
+
+{% if q %}
+  {% if results.length %}
+    <p style="color:var(--text-muted);margin-bottom:16px;">Results for "<strong>{{ q }}</strong>"</p>
+    <div class="task-list">
+      {% for r in results %}
+        <a href="/contacts/{{ r.contact_id or r.id }}" class="task-row task-row-link">
+          <div class="task-main">
+            <span class="task-name">
+              {% if r.type == 'contact' %}
+                🧑 {{ r.name }}
+              {% else %}
+                💬 {{ r.subject or r.type }}
+              {% endif %}
+            </span>
+            <span class="task-meta">
+              <span class="badge">{{ r.type }}</span>
+              {% if r.relationship_type %}<span>{{ r.relationship_type }}</span>{% endif %}
+              {% if r.score %}<span style="color:var(--text-muted)">score: {{ (r.score * 100) | round }}%</span>{% endif %}
+            </span>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="empty-state">No results for "<strong>{{ q }}</strong>". Try different keywords.</p>
+  {% endif %}
+{% else %}
+  <p class="empty-state">Enter a search query above to find contacts and interactions.</p>
+{% endif %}
+{% endblock %}

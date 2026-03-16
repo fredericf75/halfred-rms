@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block title %}{{ contact.name }} — Halfred RMS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1>{{ contact.name }}</h1>
+    <span class="task-meta">{{ contact.relationship_type or 'No type' }} · {{ contact.status }}</span>
+  </div>
+  <div style="display:flex;gap:8px;">
+    <a href="/contacts/{{ contact.id }}/edit" class="btn btn-outline">Edit</a>
+    <a href="/contacts" class="btn btn-outline">← Contacts</a>
+  </div>
+</div>
+
+<!-- Meta grid -->
+<div class="task-meta-grid">
+  <div class="meta-item"><span class="meta-label">Email</span><span class="meta-value">{{ contact.email or '—' }}</span></div>
+  <div class="meta-item"><span class="meta-label">Phone</span><span class="meta-value">{{ contact.phone or '—' }}</span></div>
+  <div class="meta-item">
+    <span class="meta-label">Health Score</span>
+    <span class="meta-value" style="display:flex;align-items:center;gap:6px;">
+      <span class="health-bar-wrap">
+        <span class="health-bar health-{{ 'green' if contact.health_score >= 70 else ('yellow' if contact.health_score >= 40 else 'red') }}"
+          style="width:{{ contact.health_score }}%"></span>
+      </span>
+      <span class="health-score health-score-{{ 'green' if contact.health_score >= 70 else ('yellow' if contact.health_score >= 40 else 'red') }}">{{ contact.health_score }} / 100</span>
+    </span>
+  </div>
+  <div class="meta-item"><span class="meta-label">Last Interaction</span><span class="meta-value">{{ contact.last_interaction_date_fmt or 'Never' }}</span></div>
+  <div class="meta-item"><span class="meta-label">Preferred Contact</span><span class="meta-value">{{ contact.preferred_contact_method or '—' }}</span></div>
+  <div class="meta-item"><span class="meta-label">Check-in Interval</span><span class="meta-value">{{ contact.check_in_interval_days or '—' }}{% if contact.check_in_interval_days %} days{% endif %}</span></div>
+  <div class="meta-item"><span class="meta-label">Next Check-in</span><span class="meta-value {{ 'overdue' if contact.checkin_overdue }}">{{ contact.next_checkin_fmt or '—' }}</span></div>
+  <div class="meta-item"><span class="meta-label">Date Met</span><span class="meta-value">{{ contact.date_met or '—' }}</span></div>
+</div>
+
+<!-- Linked Tasks -->
+<details class="task-section" open>
+  <summary class="section-title">📋 Linked Tasks</summary>
+  {% if linked_tasks.length %}
+    <div class="task-list">
+      {% for t in linked_tasks %}
+        <div class="task-row">
+          <span class="task-name">{{ t.task_id }}</span>
+          <span class="task-meta">{{ t.link_type or '' }}</span>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="empty-state">No linked tasks.</p>
+  {% endif %}
+</details>
+
+<!-- Notes -->
+<details class="task-section" open>
+  <summary class="section-title">🗒 Notes</summary>
+  {% if notes.length %}
+    {% for n in notes %}
+      <div class="task-row">
+        <div class="task-main">
+          <span class="badge">{{ n.category or 'note' }}</span>
+          <span class="task-meta">{{ n.content }}</span>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p class="empty-state">No notes yet.</p>
+  {% endif %}
+  <a href="/contacts/{{ contact.id }}/notes/new" class="btn btn-sm btn-outline" style="margin-top:8px;">+ Add Note</a>
+</details>
+
+<!-- Interaction History -->
+<details class="task-section" open>
+  <summary style="display:flex;align-items:center;justify-content:space-between;">
+    <span class="section-title" style="margin:0;">📅 Interaction History</span>
+    <a href="/contacts/{{ contact.id }}/interactions/new" class="btn btn-sm btn-outline">+ Log Interaction</a>
+  </summary>
+  {% if interactions.length %}
+    <div class="task-list" style="margin-top:12px;">
+      {% for i in interactions %}
+        <div class="task-row">
+          <div class="task-main">
+            <span class="task-name">{{ i.subject or i.type }}</span>
+            <span class="task-meta">
+              <span class="badge">{{ i.type }}</span>
+              {{ i.interaction_date_fmt }}
+              {% if i.duration_minutes %} · {{ i.duration_minutes }} min{% endif %}
+            </span>
+            {% if i.summary %}<p class="task-description">{{ i.summary }}</p>{% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="empty-state">No interactions logged.</p>
+  {% endif %}
+</details>
+
+<!-- Reminders -->
+<details class="task-section" open>
+  <summary class="section-title">🔔 Reminders</summary>
+  {% if reminders.length %}
+    <div class="task-list">
+      {% for r in reminders %}
+        <div class="task-row" id="reminder-{{ r.id }}">
+          <div class="task-main">
+            <span class="badge badge">{{ r.type }}</span>
+            <span class="task-meta">{{ r.scheduled_date_fmt }}</span>
+          </div>
+          <div class="task-actions">
+            <button class="btn btn-sm btn-outline"
+              hx-post="/reminders/{{ r.id }}/done"
+              hx-target="#reminder-{{ r.id }}"
+              hx-swap="outerHTML">Done</button>
+            <button class="btn btn-sm btn-outline"
+              hx-post="/reminders/{{ r.id }}/snooze"
+              hx-target="#reminder-{{ r.id }}"
+              hx-swap="outerHTML">Snooze</button>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="empty-state">No pending reminders.</p>
+  {% endif %}
+  <a href="/contacts/{{ contact.id }}/reminders/new" class="btn btn-sm btn-outline" style="margin-top:8px;">+ Add Reminder</a>
+</details>
+{% endblock %}

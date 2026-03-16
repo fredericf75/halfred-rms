@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Halfred RMS{% endblock %}</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="https://unpkg.com/htmx.org@1.9.12" defer></script>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="/" class="brand">
+          <div class="brand-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          </div>
+          <span class="brand-text">Halfred RMS</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="/" class="nav-link {% if active == 'dashboard' %}active{% endif %}">Dashboard</a>
+        <a href="/contacts" class="nav-link {% if active == 'contacts' %}active{% endif %}">Contacts</a>
+        <a href="/search" class="nav-link {% if active == 'search' %}active{% endif %}">Search</a>
+      </nav>
+
+      <div class="sidebar-search">
+        <form action="/search" method="get">
+          <input type="search" name="q" placeholder="Semantic search…" class="search-input" value="{{ search_q or '' }}">
+        </form>
+      </div>
+
+      <div class="sidebar-projects">
+        <div class="sidebar-section-title">Relationship Types</div>
+        {% for type, count in rel_type_counts %}
+          <a href="/contacts?relationship_type={{ type }}" class="sidebar-project-link">
+            <span class="proj-ref">{{ type }}</span>
+            <span class="task-count">{{ count }}</span>
+          </a>
+        {% else %}
+          <span class="category-label" style="font-size:0.8em; color: var(--text-muted);">No contacts yet</span>
+        {% endfor %}
+        <a href="/contacts/new" class="btn btn-sm btn-outline new-project-btn">+ New Contact</a>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="top-header">
+        <div class="top-header-left"></div>
+        <div class="top-header-right"></div>
+      </header>
+
+      <main class="main-content">
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+  </div>
+</body>
+</html>
