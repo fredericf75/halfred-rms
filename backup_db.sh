@@ -1,16 +1,5 @@
 #!/bin/bash
-# Hourly backup of rms.db to GitHub
-set -e
-
-cd /home/frederic/projects/halfred-rms
-
-# Only backup if db changed since last commit
-if git diff --quiet rms.db rms.db-shm rms.db-wal 2>/dev/null; then
-  exit 0
-fi
-
-git add rms.db
-[ -f rms.db-shm ] && git add rms.db-shm
-[ -f rms.db-wal ] && git add rms.db-wal
-git commit -m "Auto-backup: rms.db ($(date '+%Y-%m-%d %H:%M:%S'))" || true
-git push origin main || true
+cd /home/frederic/projects/tara-rms
+git add -A && git commit -m "Auto-backup: tara_rms.db" >> /tmp/tara-rms-backup.log 2>&1
+git push origin main >> /tmp/tara-rms-backup.log 2>&1
+echo "[$(date)] Backup complete" >> /tmp/tara-rms-backup.log

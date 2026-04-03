@@ -2,7 +2,7 @@ module.exports = {
   development: {
     client: 'better-sqlite3',
     connection: {
-      filename: './rms.db'
+      filename: './tara_rms.db'
     },
     useNullAsDefault: true,
     migrations: {
